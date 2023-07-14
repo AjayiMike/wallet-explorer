@@ -27,7 +27,7 @@ const Main = (props: IMainProps) => (
         © Copyright {new Date().getFullYear()} {AppConfig.title}. Made with
         Chaos and{' '}
         <a href="https://github.com/ixartz/Next-js-Boilerplate">
-          CreativeDesignsGuru Boilerplate.
+          CreativeDesignsGuru&apos;s Boilerplate.
         </a>
       </footer>
     </div>
