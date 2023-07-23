@@ -50,6 +50,7 @@
                 "react/no-array-index-key": "off",
                 "@next/next/no-img-element": "off", // We currently not using next/image because it isn't supported with SSG mode
                 "@typescript-eslint/comma-dangle": "off", // Avoid conflict rule between Eslint and Prettier
+                "@typescript-eslint/no-shadow": "off",
                 "@typescript-eslint/consistent-type-imports": "error", // Ensure `import type` is used when it's necessary
                 "no-restricted-syntax": [
                     "error",
@@ -66,7 +67,11 @@
                     "error",
                     { "argsIgnorePattern": "^_" }
                 ],
-                "no-underscore-dangle": "off"
+                "no-underscore-dangle": "off",
+                "no-param-reassign": "off",
+                "no-void": "off",
+                "no-console": "off",
+                "symbol-description": "off"
             }
         },
         // Configuration for testing
