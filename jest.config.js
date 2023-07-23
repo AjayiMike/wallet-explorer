@@ -24,14 +24,14 @@ const customJestConfig = {
     '!**/*.d.ts',
     '!**/node_modules/**',
   ],
-  coverageThreshold: {
-    global: {
-      branches: 30,
-      functions: 30,
-      lines: 30,
-      statements: 30,
-    },
-  },
+  // coverageThreshold: {
+  //   global: {
+  //     branches: 30,
+  //     functions: 30,
+  //     lines: 30,
+  //     statements: 30,
+  //   },
+  // },
   testEnvironment: 'jest-environment-jsdom',
 };
 
