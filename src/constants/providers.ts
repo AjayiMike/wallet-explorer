@@ -2,10 +2,10 @@ import { deepCopy } from '@ethersproject/properties';
 import { StaticJsonRpcProvider } from '@ethersproject/providers';
 import { isPlain } from '@reduxjs/toolkit';
 
-import { CHAIN_IDS_TO_NAMES, RPC_URLS } from './network';
+import type { SupportedChainsType } from './network';
+import { CHAIN_IDS_TO_NAMES, RPC_URLS, SupportedChainId } from './network';
 
 const AVERAGE_L1_BLOCK_TIME = 12000;
-type SupportedChainsType = keyof typeof RPC_URLS;
 
 class AppJsonRpcProvider extends StaticJsonRpcProvider {
   private _blockCache = new Map<string, Promise<any>>();
@@ -56,10 +56,13 @@ class AppJsonRpcProvider extends StaticJsonRpcProvider {
 export const RPC_PROVIDERS: {
   [key in SupportedChainsType]: StaticJsonRpcProvider;
 } = {
-  1: new AppJsonRpcProvider(1),
-  137: new AppJsonRpcProvider(137),
-  42161: new AppJsonRpcProvider(42161),
-  10: new AppJsonRpcProvider(10),
-  56: new AppJsonRpcProvider(56),
-  43114: new AppJsonRpcProvider(1),
+  [SupportedChainId.MAINNET]: new AppJsonRpcProvider(SupportedChainId.MAINNET),
+  [SupportedChainId.POLYGON]: new AppJsonRpcProvider(SupportedChainId.POLYGON),
+  [SupportedChainId.ARBITRUM_ONE]: new AppJsonRpcProvider(
+    SupportedChainId.ARBITRUM_ONE,
+  ),
+  [SupportedChainId.OPTIMISM]: new AppJsonRpcProvider(
+    SupportedChainId.OPTIMISM,
+  ),
+  [SupportedChainId.BSC]: new AppJsonRpcProvider(SupportedChainId.BSC),
 };
