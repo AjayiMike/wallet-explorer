@@ -17,9 +17,12 @@
     "postbuild": "next-sitemap"
   },
   "dependencies": {
+    "@ethersproject/properties": "^5.7.0",
+    "@ethersproject/providers": "^5.7.2",
     "@headlessui/react": "^1.7.15",
     "@heroicons/react": "^2.0.18",
     "@reduxjs/toolkit": "^1.9.5",
+    "ethers": "^6.6.4",
     "next": "^13.4.9",
     "next-seo": "^6.1.0",
     "next-sitemap": "^4.1.8",

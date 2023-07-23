@@ -65,7 +65,8 @@
                 "unused-imports/no-unused-vars": [
                     "error",
                     { "argsIgnorePattern": "^_" }
-                ]
+                ],
+                "no-underscore-dangle": "off"
             }
         },
         // Configuration for testing
