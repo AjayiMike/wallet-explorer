@@ -15,7 +15,7 @@ const Main = (props: IMainProps) => {
   const fetchAllListsCallback = useCallback(() => {
     Object.keys(lists).forEach((url) => {
       fetchList(url).catch((error) =>
-        console.debug('interval list fetching error', error),
+        console.debug('list fetching error', error),
       );
     });
   }, [fetchList, lists]);
