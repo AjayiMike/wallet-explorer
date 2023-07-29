@@ -71,7 +71,11 @@
                 "no-param-reassign": "off",
                 "no-void": "off",
                 "no-console": "off",
-                "symbol-description": "off"
+                "symbol-description": "off",
+                "no-case-declarations": "off",
+                "no-plusplus": "off",
+                "no-await-in-loop": "off",
+                "no-continue": "off"
             }
         },
         // Configuration for testing
