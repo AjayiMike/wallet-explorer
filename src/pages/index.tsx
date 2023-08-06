@@ -4,6 +4,7 @@ import { useCallback, useMemo, useRef } from 'react';
 import { FixedSizeList } from 'react-window';
 
 import ChainDropdown from '@/components/chainsDropdown';
+import Loader from '@/components/Spinner';
 import TokenLogo from '@/components/tokenLogo';
 import WalletInput from '@/components/walletInput';
 import { AppConfig } from '@/constants/appConfig';
@@ -14,7 +15,7 @@ import useCurrencyBalance, {
 import { Main } from '@/layouts/Main';
 import { Meta } from '@/layouts/Meta';
 import { useAppSelector } from '@/state/hooks';
-import { currencyKey } from '@/utils';
+import { currencyKey, formatCurrencyValue } from '@/utils';
 import { tokenComparator } from '@/utils/sorting';
 
 const Index = () => {
@@ -24,10 +25,6 @@ const Index = () => {
   const tokensArray = Object.values(allTokens);
   const [balances, balancesAreLoading] = useAllTokenBalances();
 
-  // console.log({ balances, balancesAreLoading });
-
-  // console.log({ allTokens });
-
   const sortedTokens: Token[] = useMemo(
     () =>
       !balancesAreLoading
@@ -36,7 +33,11 @@ const Index = () => {
     [balances, balancesAreLoading],
   );
 
-  console.log('sortedTokens: ', sortedTokens);
+  // tokens are sorted according to balances, fetching token balances takes some times. So we render unsorted token while we wait for them to be sorted
+  const renderedToken = useMemo(
+    () => (sortedTokens.length ? sortedTokens : tokensArray),
+    [sortedTokens],
+  );
 
   const itemKey = useCallback((index: number, data: typeof sortedTokens) => {
     const currency = data[index];
@@ -70,10 +71,11 @@ const Index = () => {
             ref={fixedList as any}
             width="100%"
             height={1200}
-            itemData={sortedTokens}
-            itemCount={sortedTokens.length}
+            itemData={renderedToken}
+            itemCount={renderedToken.length}
             itemSize={70}
             itemKey={itemKey}
+            overscanCount={30}
           >
             {Row}
           </FixedSizeList>
@@ -101,7 +103,13 @@ export function CurrencyRow({
         <span className="text-sm">{currency.name}</span>
       </div>
       <div className="flex-1 text-right font-semibold">
-        {balance?.toFixed(3)}
+        {balance ? (
+          formatCurrencyValue(Number(balance.toSignificant()))
+        ) : (
+          <div className="ml-auto w-4">
+            <Loader />
+          </div>
+        )}
       </div>
     </div>
   );
