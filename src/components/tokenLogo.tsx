@@ -8,6 +8,14 @@ interface ITokenLogo {
 }
 
 const TokenLogo: React.FC<ITokenLogo> = ({ token, size = 24 }) => {
+  const addLogoFallback = (event: any) => {
+    const { currentSrc } = event.target;
+    const protocol = currentSrc.split(':')[0].toLowerCase();
+    if (protocol === 'ipfs') {
+      const hash = currentSrc.match(/^ipfs:(\/\/)?(.*)$/i)?.[2];
+      event.currentTarget.src = `https://cloudflare-ipfs.com/ipfs/${hash}/`;
+    }
+  };
   const imageProps = {
     height: size,
     width: size,
@@ -21,6 +29,7 @@ const TokenLogo: React.FC<ITokenLogo> = ({ token, size = 24 }) => {
         src={logoUri}
         className="rounded-[50%]"
         alt={`${token.symbol ?? 'token'} logo`}
+        onError={addLogoFallback}
         {...imageProps}
       />
     );
