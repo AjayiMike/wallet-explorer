@@ -67,3 +67,12 @@ export function tokensToChainTokenMap(
 export function currencyKey(currency: Currency): string {
   return currency.isToken ? currency.address : 'ETHER';
 }
+
+export function formatCurrencyValue(value: number): string {
+  const formatter = new Intl.NumberFormat('en-US', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+
+  return formatter.format(value);
+}
