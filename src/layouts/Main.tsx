@@ -40,11 +40,8 @@ const Main = (props: IMainProps) => {
         <main className="content py-5 text-xl">{props.children}</main>
 
         <footer className="border-t border-gray-300 py-8 text-center text-sm">
-          © Copyright {new Date().getFullYear()} {AppConfig.title}. Made with
-          Chaos and{' '}
-          <a href="https://github.com/ixartz/Next-js-Boilerplate">
-            CreativeDesignsGuru&apos;s Boilerplate.
-          </a>
+          © Copyright {new Date().getFullYear()} {AppConfig.title}. Crafted
+          with code, chaos, and an unholy amount of memes 🚀💻😂
         </footer>
       </div>
     </div>
