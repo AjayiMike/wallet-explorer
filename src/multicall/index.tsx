@@ -1,16 +1,15 @@
+import { Contract } from '@ethersproject/contracts';
 import type { ListenerOptions } from '@uniswap/redux-multicall';
 import { createMulticall } from '@uniswap/redux-multicall';
-import { Contract } from 'ethers';
 import { useMemo } from 'react';
 
+import multicallABI from '@/abis/uniswap-multicall.json';
 import { MULTICALL_ADDRESS } from '@/constants/addresses';
 import { SupportedChainId } from '@/constants/network';
 import useBlockNumber from '@/hooks/useBlockNumber';
 import useProvider from '@/hooks/useProvider';
 import type { AppState } from '@/state';
 import { useAppSelector } from '@/state/hooks';
-
-import multicallABI from '../abis/uniswap-multicall.json';
 
 export const multicall = createMulticall({ reducerPath: 'multicall' });
 
@@ -32,6 +31,7 @@ const MulticallUpdater = () => {
   const provider = useProvider();
 
   const multcallAddress = useMemo(() => MULTICALL_ADDRESS[chainId], [chainId]);
+
   const listenerOptions: ListenerOptions = useMemo(
     () => ({
       blocksPerFetch: getBlocksPerFetchForChainId(chainId),
