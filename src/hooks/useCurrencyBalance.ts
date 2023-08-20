@@ -80,7 +80,8 @@ export function useAllTokenBalances(): [
   { [tokenAddress: string]: CurrencyAmount<Token> | undefined },
   boolean,
 ] {
-  const account = useAppSelector((state) => state.application.address);
+  const account = useAppSelector((state) => state.application.account);
+
   const allTokens = useAllTokens();
   const allTokensArray = useMemo(
     () => Object.values(allTokens ?? {}),

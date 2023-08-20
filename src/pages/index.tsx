@@ -8,22 +8,47 @@ import Loader from '@/components/Spinner';
 import TokenLogo from '@/components/tokenLogo';
 import WalletInput from '@/components/walletInput';
 import { AppConfig } from '@/constants/appConfig';
+import type { SupportedChainId } from '@/constants/network';
 import { useAllTokens } from '@/hooks/tokens';
 import useCurrencyBalance, {
   useAllTokenBalances,
 } from '@/hooks/useCurrencyBalance';
 import { Main } from '@/layouts/Main';
 import { Meta } from '@/layouts/Meta';
-import { useAppSelector } from '@/state/hooks';
-import { currencyKey, formatCurrencyValue } from '@/utils';
+import { useApplicationState } from '@/state/application/hooks';
+import { setAccount, updateChainId } from '@/state/application/reducer';
+import { useAppDispatch, useAppSelector } from '@/state/hooks';
+import { currencyKey, formatCurrencyValue, isAddress } from '@/utils';
 import { tokenComparator } from '@/utils/sorting';
 
 const Index = () => {
+  const applicationState = useApplicationState();
   // refs for fixed size lists
   const fixedList = useRef<FixedSizeList>();
   const allTokens = useAllTokens();
   const tokensArray = Object.values(allTokens);
   const [balances, balancesAreLoading] = useAllTokenBalances();
+
+  const dispatch = useAppDispatch();
+
+  const handlePaste = useCallback(
+    (event: React.ClipboardEvent<HTMLInputElement>) => {
+      const pastedText = event.clipboardData.getData('text');
+
+      // Validate pasted content
+      if (isAddress(pastedText)) {
+        dispatch(setAccount({ account: pastedText }));
+      }
+
+      // Prevent default paste behavior
+      event.preventDefault();
+    },
+    [],
+  );
+
+  const hanldleChainChange = useCallback((chainId: SupportedChainId) => {
+    dispatch(updateChainId({ chainId }));
+  }, []);
 
   const sortedTokens: Token[] = useMemo(
     () =>
@@ -62,9 +87,15 @@ const Index = () => {
       }
     >
       <div className="">
-        <WalletInput value="" onChange={() => {}} />
+        <WalletInput
+          value={applicationState.account ?? ''}
+          handlePaste={handlePaste}
+        />
         <div className="flex justify-end">
-          <ChainDropdown />
+          <ChainDropdown
+            chainId={applicationState.chainId}
+            hanldleChainChange={hanldleChainChange}
+          />
         </div>
         <div className="">
           <FixedSizeList
@@ -92,7 +123,7 @@ export function CurrencyRow({
   currency: Currency;
   style?: CSSProperties;
 }) {
-  const account = useAppSelector((state) => state.application.address);
+  const account = useAppSelector((state) => state.application.account);
   const balance = useCurrencyBalance(account ?? undefined, currency);
 
   return (

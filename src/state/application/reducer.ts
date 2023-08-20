@@ -6,12 +6,12 @@ import { isAddress } from '@/utils';
 
 export interface ApplicationState {
   readonly chainId: SupportedChainsType;
-  readonly address: string | null;
+  readonly account: string | null;
 }
 
 const initialState: ApplicationState = {
   chainId: 1,
-  address: ZeroAddress,
+  account: ZeroAddress,
 };
 
 const applicationSlice = createSlice({
@@ -24,12 +24,12 @@ const applicationSlice = createSlice({
     },
     setAccount(state, action) {
       const { account } = action.payload;
-      if (!isAddress(account)) state.address = account;
+      if (!isAddress(account)) state.account = ZeroAddress;
 
-      state.address = ZeroAddress;
+      state.account = account;
     },
   },
 });
 
-export const { updateChainId } = applicationSlice.actions;
+export const { updateChainId, setAccount } = applicationSlice.actions;
 export default applicationSlice.reducer;
