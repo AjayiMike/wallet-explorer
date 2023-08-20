@@ -1,11 +1,17 @@
+import type { ClipboardEvent, KeyboardEvent } from 'react';
 import React from 'react';
 
 interface WalletInputProps {
   value: string;
-  onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  handlePaste: (event: ClipboardEvent<HTMLInputElement>) => void;
 }
 
-const WalletInput = ({ value, onChange }: WalletInputProps) => {
+const WalletInput = ({ value, handlePaste }: WalletInputProps) => {
+  const handleKeyPress = (event: KeyboardEvent<HTMLInputElement>) => {
+    // Prevent typing by intercepting key events
+    event.preventDefault();
+  };
+
   return (
     <div className="relative mb-8 rounded-md shadow-sm">
       <input
@@ -15,8 +21,10 @@ const WalletInput = ({ value, onChange }: WalletInputProps) => {
         className="block w-full rounded-md border-gray-300 p-2 pr-12 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
         placeholder="Paste a wallet address here"
         value={value}
-        onChange={onChange}
+        onPaste={handlePaste}
+        onKeyPress={handleKeyPress}
         style={{ backgroundColor: '#f3f4f6', color: '#1f2937' }}
+        readOnly
       />
       <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
         <svg

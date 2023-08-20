@@ -45,7 +45,6 @@ export default createReducer(initialState, (builder) =>
       (state, { payload: { requestId, url } }) => {
         const current = state.byUrl[url]?.current ?? null;
         const pendingUpdate = state.byUrl[url]?.pendingUpdate ?? null;
-
         state.byUrl[url] = {
           current,
           pendingUpdate,
@@ -59,7 +58,6 @@ export default createReducer(initialState, (builder) =>
       (state, { payload: { requestId, tokenList, url } }) => {
         const current = state.byUrl[url]?.current;
         const loadingRequestId = state.byUrl[url]?.loadingRequestId;
-
         if (current) {
           if (loadingRequestId === null || loadingRequestId === requestId) {
             state.byUrl[url] = {
