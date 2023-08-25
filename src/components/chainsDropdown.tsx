@@ -51,7 +51,7 @@ const ChainDropdown: React.FC<{
     <Menu as="div" className="relative inline-block text-left">
       {({ open }) => (
         <>
-          <Menu.Button className="relative inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+          <Menu.Button className="relative inline-flex justify-center rounded-md border border-[#2F1A3B] bg-[#0D0D0E] px-4 py-2 text-sm font-medium shadow-sm transition-colors hover:bg-[#2F1A3B]">
             <img
               src={activeChainInfo?.iconUrl}
               alt={activeChainInfo?.name}
@@ -76,7 +76,7 @@ const ChainDropdown: React.FC<{
           >
             <Menu.Items
               static
-              className="absolute z-10 mt-2 w-56 divide-y rounded-md bg-white shadow-lg focus:outline-none"
+              className="absolute right-0 z-10 mt-2 w-52 divide-y divide-[#2C2C2E] bg-[#0D0D0E] shadow-lg focus:outline-none"
             >
               {chains.map((chain, index) => (
                 <Menu.Item key={index}>
@@ -85,8 +85,8 @@ const ChainDropdown: React.FC<{
                       onClick={() => hanldleChainChange(chain.chainId)}
                       className={`${
                         active
-                          ? 'flex items-center bg-gray-100 text-gray-900'
-                          : 'flex items-center text-gray-700'
+                          ? 'flex items-center bg-[#2C2C2E]'
+                          : 'flex items-center'
                       } block w-full px-4 py-2 text-sm`}
                       type="button"
                     >
