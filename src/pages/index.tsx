@@ -1,6 +1,6 @@
 import type { Currency, Token } from '@uniswap/sdk-core';
 import type { CSSProperties } from 'react';
-import { useCallback, useMemo, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { FixedSizeList } from 'react-window';
 
 import ChainDropdown from '@/components/chainsDropdown';
@@ -80,13 +80,21 @@ const Index = () => {
     return <CurrencyRow currency={token} style={style} />;
   }, []);
 
+  const [isSSR, setIsSSR] = useState(true);
+
+  useEffect(() => {
+    setIsSSR(false);
+  }, []);
+
+  if (isSSR) return null;
+
   return (
     <Main
       meta={
         <Meta title={AppConfig.title} description={AppConfig.description} />
       }
     >
-      <div className="">
+      <div>
         <WalletInput
           value={applicationState.account ?? ''}
           handlePaste={handlePaste}
@@ -97,7 +105,7 @@ const Index = () => {
             hanldleChainChange={hanldleChainChange}
           />
         </div>
-        <div className="">
+        {!isSSR && (
           <FixedSizeList
             ref={fixedList as any}
             width="100%"
@@ -110,7 +118,7 @@ const Index = () => {
           >
             {Row}
           </FixedSizeList>
-        </div>
+        )}
       </div>
     </Main>
   );
@@ -133,7 +141,10 @@ export function CurrencyRow({
         <span className="font-bold">{currency.symbol}</span>
         <span className="text-sm">{currency.name}</span>
       </div>
-      <div className="flex-1 text-right font-semibold">
+      <div
+        suppressContentEditableWarning
+        className="flex-1 text-right font-semibold"
+      >
         {balance ? (
           formatCurrencyValue(Number(balance.toSignificant()))
         ) : (
