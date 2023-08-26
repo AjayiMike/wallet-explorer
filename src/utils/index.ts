@@ -4,6 +4,15 @@ import type { TokenInfo, TokenList } from 'tokenList';
 
 import { WrappedTokenInfo } from '@/state/lists/wrappedTokenInfo';
 
+// shorten the checksummed version of the input address to have 0x + 4 characters at start and end
+export function shortenAddress(address: string, chars = 4): string {
+  const parsed = isAddress(address);
+  if (!parsed) {
+    throw Error(`Invalid 'address' parameter '${address}'.`);
+  }
+  return `${parsed.substring(0, chars + 2)}...${parsed.substring(42 - chars)}`;
+}
+
 export function generateId() {
   const timestamp = Date.now().toString(36);
   const randomStr = Math.random().toString(36).substr(2, 5);

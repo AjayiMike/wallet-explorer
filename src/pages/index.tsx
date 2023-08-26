@@ -1,8 +1,9 @@
 import type { Currency, Token } from '@uniswap/sdk-core';
 import type { CSSProperties } from 'react';
-import { useCallback, useMemo, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { FixedSizeList } from 'react-window';
 
+import Account from '@/components/account';
 import ChainDropdown from '@/components/chainsDropdown';
 import Loader from '@/components/Spinner';
 import TokenLogo from '@/components/tokenLogo';
@@ -16,9 +17,9 @@ import useCurrencyBalance, {
 import { Main } from '@/layouts/Main';
 import { Meta } from '@/layouts/Meta';
 import { useApplicationState } from '@/state/application/hooks';
-import { setAccount, updateChainId } from '@/state/application/reducer';
+import { updateChainId } from '@/state/application/reducer';
 import { useAppDispatch, useAppSelector } from '@/state/hooks';
-import { currencyKey, formatCurrencyValue, isAddress } from '@/utils';
+import { currencyKey, formatCurrencyValue } from '@/utils';
 import { tokenComparator } from '@/utils/sorting';
 
 const Index = () => {
@@ -30,21 +31,6 @@ const Index = () => {
   const [balances, balancesAreLoading] = useAllTokenBalances();
 
   const dispatch = useAppDispatch();
-
-  const handlePaste = useCallback(
-    (event: React.ClipboardEvent<HTMLInputElement>) => {
-      const pastedText = event.clipboardData.getData('text');
-
-      // Validate pasted content
-      if (isAddress(pastedText)) {
-        dispatch(setAccount({ account: pastedText }));
-      }
-
-      // Prevent default paste behavior
-      event.preventDefault();
-    },
-    [],
-  );
 
   const hanldleChainChange = useCallback((chainId: SupportedChainId) => {
     dispatch(updateChainId({ chainId }));
@@ -80,24 +66,30 @@ const Index = () => {
     return <CurrencyRow currency={token} style={style} />;
   }, []);
 
+  const [isSSR, setIsSSR] = useState(true);
+
+  useEffect(() => {
+    setIsSSR(false);
+  }, []);
+
+  if (isSSR) return null;
+
   return (
     <Main
       meta={
         <Meta title={AppConfig.title} description={AppConfig.description} />
       }
     >
-      <div className="">
-        <WalletInput
-          value={applicationState.account ?? ''}
-          handlePaste={handlePaste}
-        />
-        <div className="flex justify-end">
+      <div>
+        <WalletInput />
+        <div className="flex justify-between">
+          <Account account={applicationState.account} />
           <ChainDropdown
             chainId={applicationState.chainId}
             hanldleChainChange={hanldleChainChange}
           />
         </div>
-        <div className="">
+        {!isSSR && (
           <FixedSizeList
             ref={fixedList as any}
             width="100%"
@@ -110,7 +102,7 @@ const Index = () => {
           >
             {Row}
           </FixedSizeList>
-        </div>
+        )}
       </div>
     </Main>
   );
@@ -133,7 +125,10 @@ export function CurrencyRow({
         <span className="font-bold">{currency.symbol}</span>
         <span className="text-sm">{currency.name}</span>
       </div>
-      <div className="flex-1 text-right font-semibold">
+      <div
+        suppressContentEditableWarning
+        className="flex-1 text-right font-semibold"
+      >
         {balance ? (
           formatCurrencyValue(Number(balance.toSignificant()))
         ) : (

@@ -1,16 +1,27 @@
-import type { ClipboardEvent, KeyboardEvent } from 'react';
-import React from 'react';
+import { isAddress } from 'ethers';
+import React, { useCallback, useState } from 'react';
 
-interface WalletInputProps {
-  value: string;
-  handlePaste: (event: ClipboardEvent<HTMLInputElement>) => void;
-}
+import { setAccount } from '@/state/application/reducer';
+import { useAppDispatch } from '@/state/hooks';
 
-const WalletInput = ({ value, handlePaste }: WalletInputProps) => {
-  const handleKeyPress = (event: KeyboardEvent<HTMLInputElement>) => {
-    // Prevent typing by intercepting key events
-    event.preventDefault();
-  };
+const WalletInput = () => {
+  const [input, setInput] = useState('');
+  const dispatch = useAppDispatch();
+
+  const handleAccountChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const text = event.target.value;
+      const validSoFar = /^(0x[a-fA-F0-9]{0,40}|0)?$/.test(text);
+
+      if (validSoFar) setInput(text);
+
+      // Validate pasted content
+      if (isAddress(text)) {
+        dispatch(setAccount({ account: text }));
+      }
+    },
+    [],
+  );
 
   return (
     <div className="relative mb-8 rounded-md shadow-sm">
@@ -18,13 +29,10 @@ const WalletInput = ({ value, handlePaste }: WalletInputProps) => {
         type="text"
         name="wallet_address"
         id="wallet_address"
-        className="block w-full rounded-md border-gray-300 p-2 pr-12 focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+        className="block w-full rounded-md bg-[#2C2C2E] p-2 pr-12 outline-none focus:outline-[#d78eefe0] sm:text-sm"
         placeholder="Paste a wallet address here"
-        value={value}
-        onPaste={handlePaste}
-        onKeyPress={handleKeyPress}
-        style={{ backgroundColor: '#f3f4f6', color: '#1f2937' }}
-        readOnly
+        value={input}
+        onChange={handleAccountChange}
       />
       <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
         <svg
