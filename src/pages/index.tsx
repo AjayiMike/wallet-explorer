@@ -3,6 +3,7 @@ import type { CSSProperties } from 'react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { FixedSizeList } from 'react-window';
 
+import Account from '@/components/account';
 import ChainDropdown from '@/components/chainsDropdown';
 import Loader from '@/components/Spinner';
 import TokenLogo from '@/components/tokenLogo';
@@ -16,9 +17,9 @@ import useCurrencyBalance, {
 import { Main } from '@/layouts/Main';
 import { Meta } from '@/layouts/Meta';
 import { useApplicationState } from '@/state/application/hooks';
-import { setAccount, updateChainId } from '@/state/application/reducer';
+import { updateChainId } from '@/state/application/reducer';
 import { useAppDispatch, useAppSelector } from '@/state/hooks';
-import { currencyKey, formatCurrencyValue, isAddress } from '@/utils';
+import { currencyKey, formatCurrencyValue } from '@/utils';
 import { tokenComparator } from '@/utils/sorting';
 
 const Index = () => {
@@ -30,21 +31,6 @@ const Index = () => {
   const [balances, balancesAreLoading] = useAllTokenBalances();
 
   const dispatch = useAppDispatch();
-
-  const handlePaste = useCallback(
-    (event: React.ClipboardEvent<HTMLInputElement>) => {
-      const pastedText = event.clipboardData.getData('text');
-
-      // Validate pasted content
-      if (isAddress(pastedText)) {
-        dispatch(setAccount({ account: pastedText }));
-      }
-
-      // Prevent default paste behavior
-      event.preventDefault();
-    },
-    [],
-  );
 
   const hanldleChainChange = useCallback((chainId: SupportedChainId) => {
     dispatch(updateChainId({ chainId }));
@@ -95,11 +81,9 @@ const Index = () => {
       }
     >
       <div>
-        <WalletInput
-          value={applicationState.account ?? ''}
-          handlePaste={handlePaste}
-        />
-        <div className="flex justify-end">
+        <WalletInput />
+        <div className="flex justify-between">
+          <Account account={applicationState.account} />
           <ChainDropdown
             chainId={applicationState.chainId}
             hanldleChainChange={hanldleChainChange}
