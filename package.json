@@ -17,15 +17,26 @@
     "postbuild": "next-sitemap"
   },
   "dependencies": {
+    "@ethersproject/abi": "^5.7.0",
+    "@ethersproject/contracts": "^5.7.0",
+    "@ethersproject/properties": "^5.7.0",
+    "@ethersproject/providers": "^5.7.2",
     "@headlessui/react": "^1.7.15",
     "@heroicons/react": "^2.0.18",
     "@reduxjs/toolkit": "^1.9.5",
+    "@types/react-window": "^1.8.5",
+    "@uniswap/redux-multicall": "^1.1.8",
+    "@uniswap/sdk-core": "^4.0.6",
+    "ethers": "^6.6.4",
+    "jsbi": "^3.2.4",
     "next": "^13.4.9",
     "next-seo": "^6.1.0",
     "next-sitemap": "^4.1.8",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-redux": "^8.1.1"
+    "react-redux": "^8.1.1",
+    "react-window": "^1.8.9",
+    "redux-localstorage-simple": "^2.5.1"
   },
   "devDependencies": {
     "@commitlint/cli": "^17.6.6",

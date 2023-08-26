@@ -1,56 +1,63 @@
 import { Menu, Transition } from '@headlessui/react';
 import { ChevronDownIcon } from '@heroicons/react/24/outline';
-import { Fragment, useState } from 'react';
+import { Fragment, useMemo } from 'react';
+
+import type { SupportedChainId } from '@/constants/network';
 
 const chains = [
   {
     name: 'Ethereum Mainnet',
     shortName: 'Ethereum',
     chainId: 1,
-    explorers: 'https://etherscan.io',
     iconUrl: 'https://icons.llamao.fi/icons/chains/rsz_ethereum.jpg',
   },
   {
     name: 'BNB Smart Chain Mainnet',
     shortName: 'BSC',
     chainId: 56,
-    explorers: 'https://bscscan.com',
     iconUrl: 'https://icons.llamao.fi/icons/chains/rsz_binance.jpg',
+  },
+  {
+    name: 'Polygon Mainnet',
+    shortName: 'Polygon',
+    chainId: 137,
+    iconUrl:
+      'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/polygon/info/logo.png',
   },
   {
     name: 'Arbitrum One',
     shortName: 'Arbitrum',
     chainId: 42161,
-    explorers: 'https://arbiscan.io',
     iconUrl: 'https://icons.llamao.fi/icons/chains/rsz_arbitrum.jpg',
   },
   {
     name: 'OP Mainnet',
     shortName: 'Optimism',
     chainId: 10,
-    explorers: 'https://optimistic.etherscan.io',
     iconUrl: 'https://icons.llamao.fi/icons/chains/rsz_optimism.jpg',
   },
 ];
 
-const ChainDropdown = () => {
-  const [selectedChain, setSelectedChain] = useState(chains[0]);
-
-  const handleChange = (chain: any) => {
-    setSelectedChain(chain);
-  };
+const ChainDropdown: React.FC<{
+  chainId: SupportedChainId;
+  hanldleChainChange: (chainId: SupportedChainId) => void;
+}> = ({ chainId, hanldleChainChange }) => {
+  const activeChainInfo = useMemo(
+    () => chains.find((item) => item.chainId === chainId),
+    [chainId],
+  );
 
   return (
     <Menu as="div" className="relative inline-block text-left">
       {({ open }) => (
         <>
-          <Menu.Button className="relative inline-flex justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+          <Menu.Button className="relative inline-flex justify-center rounded-md border border-[#2F1A3B] bg-[#0D0D0E] px-4 py-2 text-sm font-medium shadow-sm transition-colors hover:bg-[#2F1A3B]">
             <img
-              src={selectedChain?.iconUrl}
-              alt={selectedChain?.name}
+              src={activeChainInfo?.iconUrl}
+              alt={activeChainInfo?.name}
               className="mr-2 h-5 w-5 rounded-full"
             />
-            {selectedChain?.shortName}
+            {activeChainInfo?.shortName}
             <ChevronDownIcon
               className="-mr-1 ml-2 h-5 w-5"
               aria-hidden="true"
@@ -69,17 +76,17 @@ const ChainDropdown = () => {
           >
             <Menu.Items
               static
-              className="absolute z-10 mt-2 w-56 divide-y rounded-md bg-white shadow-lg focus:outline-none"
+              className="absolute right-0 z-10 mt-2 w-52 divide-y divide-[#2C2C2E] bg-[#0D0D0E] shadow-lg focus:outline-none"
             >
               {chains.map((chain, index) => (
                 <Menu.Item key={index}>
                   {({ active }) => (
                     <button
-                      onClick={() => handleChange(chain)}
+                      onClick={() => hanldleChainChange(chain.chainId)}
                       className={`${
                         active
-                          ? 'flex items-center bg-gray-100 text-gray-900'
-                          : 'flex items-center text-gray-700'
+                          ? 'flex items-center bg-[#2C2C2E]'
+                          : 'flex items-center'
                       } block w-full px-4 py-2 text-sm`}
                       type="button"
                     >
@@ -88,7 +95,9 @@ const ChainDropdown = () => {
                         alt={chain.name}
                         className="mr-2 h-5 w-5 rounded-full"
                       />
-                      {chain.shortName}
+                      <span className="whitespace-nowrap">
+                        {chain.shortName}
+                      </span>
                     </button>
                   )}
                 </Menu.Item>
